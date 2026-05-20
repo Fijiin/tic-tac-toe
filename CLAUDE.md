@@ -89,7 +89,22 @@ git commit -m "short description"
 git push
 ```
 
-Commit messages are lowercase, imperative, and specific (e.g. `add draw detection`, `fix winning line highlight`, `update color scheme`).
+**Commit and push frequently** — after every meaningful unit of work (a new feature, a bug fix, a style change, a refactor). Never batch unrelated changes into one commit. The goal is that the remote always reflects the current working state so no progress is ever lost.
+
+### Commit message rules
+- Lowercase, imperative verb: `add`, `fix`, `update`, `remove`, `refactor`
+- Specific enough to understand without reading the diff (e.g. `add draw detection`, `fix winning line highlight`, `remove unused score reset on restart`)
+- One line; no period at the end
+- If multiple things changed, split into multiple commits
+
+### When to commit
+| Moment | Example message |
+|---|---|
+| After adding a new feature | `add ai opponent logic` |
+| After fixing a bug | `fix click handler firing after game over` |
+| After a visual/style change | `update cell hover color to match palette` |
+| After updating docs/config | `update CLAUDE.md git workflow section` |
+| Before switching to a different task | commit whatever is stable, even if incomplete |
 
 ---
 
