@@ -39,6 +39,8 @@ tic-tac-toe/
 ├── style.css       — Styling + themes (CSS custom properties)
 ├── game.js         — Game state, render loop, sidebar, undo
 ├── ai.js           — Minimax AI engine
+├── Assets/
+│   └── favicon.svg — Custom favicon (tic-tac-toe grid icon)
 └── CLAUDE.md       — Developer guidance for AI-assisted work
 ```
 
