@@ -2,7 +2,7 @@
 
 ### Reporting a vulnerability
 
-Do not open a public GitHub issue for security vulnerabilities. Instead, email **filipklimes12@seznam.cz** with a description of the issue, steps to reproduce, and the potential impact. A response can be expected within 48 hours.
+Do not open a public GitHub issue for security vulnerabilities. Use GitHub's private vulnerability reporting instead — click **"Report a vulnerability"** on the [Security tab](https://github.com/Fijiin/tic-tac-toe/security/advisories/new) of this repository. A response can be expected within 48 hours.
 
 ### Supported versions
 
