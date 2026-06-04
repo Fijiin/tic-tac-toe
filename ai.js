@@ -8,7 +8,7 @@ function getAiMove(board, aiMark, humanMark, difficulty, size) {
   if (difficulty === 'easy') return _random(empty);
   if (difficulty === 'medium' && Math.random() < 0.4) return _random(empty);
 
-  const maxDepth = size === 4 ? 5 : 18;
+  const maxDepth = size === 5 ? 4 : size === 4 ? 5 : 18;
   return _minimax(board.slice(), aiMark, aiMark, humanMark, size, 0, maxDepth, -Infinity, Infinity).index;
 }
 
