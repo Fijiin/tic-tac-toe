@@ -8,10 +8,10 @@ A dark-themed, dependency-free Tic Tac Toe game built in plain HTML, CSS, and Ja
 
 ## Features
 
-- **AI Opponent** — Easy, Medium, and Hard difficulty (unbeatable Hard on 3×3, depth-limited on 4×4). Uses minimax with alpha-beta pruning.
+- **AI Opponent** — Easy, Medium, and Hard difficulty on all board sizes. Uses minimax with alpha-beta pruning (unbeatable on 3×3; depth-limited on 4×4 and 5×5).
 - **Custom Player Names** — Rename both players from the settings sidebar.
 - **Undo** — Take back the last move. In AI mode, undoes both the AI's response and your move.
-- **Board Sizes** — Switch between 3×3, 4×4, and 5×5 grids. AI available on 3×3 and 4×4.
+- **Board Sizes** — Switch between 3×3, 4×4, and 5×5 grids.
 - **Three Themes** — Navy (default), Forest, and Purple. Switches instantly.
 - **Score Tracking** — Wins and draws persist across rounds until page reload.
 - **Settings Sidebar** — Slide-in panel with an animated, theme-coloured difficulty slider.
@@ -50,7 +50,7 @@ tic-tac-toe/
 2. Click any cell to place your mark — **X always goes first**.
 3. Hit **⚙** (top-right) to open Settings:
    - Set player names
-   - Choose board size
+   - Choose board size (3×3, 4×4, or 5×5)
    - Toggle AI opponent and set difficulty with the slider
    - Switch colour theme
 4. Use **← Undo** to take back a move, or **New Round** to reset the board.
