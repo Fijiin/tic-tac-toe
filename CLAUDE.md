@@ -36,6 +36,8 @@ tic-tac-toe/
 ├── README.md         — project overview, features, how to run
 ├── SECURITY.md       — vulnerability reporting policy and security scope
 ├── CLAUDE.md         — this file; developer guidance for AI-assisted work
+├── Assets/
+│   └── favicon.svg   — SVG favicon (tic-tac-toe grid with X/O, uses game colour palette)
 └── .github/
     ├── workflows/
     │   └── codeql.yml    — CodeQL security scanning (runs on push + weekly)
@@ -43,6 +45,9 @@ tic-tac-toe/
 ```
 
 `tic_tac_toe.html` is the retired single-file version — kept as a redirect to `index.html` only.
+
+### Assets folder
+All static assets (icons, images, fonts if any are added later) live in `Assets/`. When adding a new asset, place it here and reference it with a relative path from `index.html`, e.g. `href="Assets/favicon.svg"`.
 
 ---
 
@@ -180,6 +185,7 @@ Follow this checklist in order. Every step is mandatory.
 - **Add markup** — add to `index.html`. `id` for unique elements, class for repeated.
 - **Add styles** — add to `style.css`. Use existing custom properties.
 - **Add logic** — pure function if computation involved. AI logic in `ai.js`, everything else in `game.js`.
+- **Add assets** — any icons or images go in `Assets/`, referenced via relative path.
 - **Wire it up** — update event handler, mutate state, call `render()`.
 - **Test reset** — confirm `init()` handles the new state correctly.
 
@@ -213,6 +219,7 @@ All doc updates go in the same commit as the feature code. Never commit a featur
 | AI not triggering | `aiEnabled` false | `state.settings.aiEnabled` in console |
 | Theme not applying | `data-theme` not set on `<html>` | `document.documentElement.dataset` |
 | Sidebar not closing | `open` / `visible` class not removed | `closeSidebar()` |
+| Favicon not showing | Wrong path or browser cache | Check `Assets/favicon.svg` path in `<head>` |
 
 1. Open DevTools (`F12`) → Console. Inspect `state` directly — it's global.
 2. Call `init()` from console to reset without reloading.
