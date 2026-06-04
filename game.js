@@ -216,7 +216,7 @@ function syncSidebar() {
   $$('#size-pills .pill').forEach(p => p.classList.toggle('active', +p.dataset.size === settings.size));
   aiToggleEl.classList.toggle('off', !settings.aiEnabled);
   aiToggleEl.setAttribute('aria-checked', String(settings.aiEnabled));
-  diffGroupEl.style.display = (settings.aiEnabled && settings.size < 5) ? '' : 'none';
+  diffGroupEl.style.display = settings.aiEnabled ? '' : 'none';
   $$('#theme-btns .theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === settings.theme));
 }
 
@@ -225,14 +225,12 @@ $$('#size-pills .pill').forEach(pill => {
     const newSize = +pill.dataset.size;
     if (newSize === state.settings.size) return;
     state.settings.size = newSize;
-    if (newSize === 5) state.settings.aiEnabled = false;
     syncSidebar();
     init();
   });
 });
 
 aiToggleEl.addEventListener('click', () => {
-  if (state.settings.size === 5) return;
   state.settings.aiEnabled = !state.settings.aiEnabled;
   if (state.settings.aiEnabled  && p2Input.value.trim() === 'Player 2') p2Input.value = 'Computer';
   if (!state.settings.aiEnabled && p2Input.value.trim() === 'Computer')  p2Input.value = 'Player 2';
