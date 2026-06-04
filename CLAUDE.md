@@ -4,84 +4,137 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Philosophy
 
-Projects here are standalone, dependency-free web apps — single HTML files with embedded CSS and JS, or small collections of plain files. No build tools, no package managers, no frameworks. Everything runs by opening a file directly in a browser.
+Standalone, dependency-free web app — plain HTML, CSS, and JS files. No build tools, no package managers, no frameworks. Everything runs by opening `index.html` directly in a browser.
 
 ---
 
-## Running the Games
+## File Structure
 
-Open the relevant `.html` file directly in a browser (double-click or drag into the address bar). No dev server, bundler, or install step. Changes take effect on page reload (`F5` or `Ctrl+R`).
+```
+tic-tac-toe/
+├── index.html   — HTML structure only (board, scoreboard, sidebar, buttons)
+├── style.css    — all styling + 3 themes as CSS custom property sets
+├── game.js      — central state object, render loop, event handlers, undo, board-size logic
+├── ai.js        — AI engine: minimax + alpha-beta pruning, all 3 difficulty levels
+└── CLAUDE.md
+```
 
-To test a specific game state quickly, call `init()` from the browser console to reset without reloading, or mutate state globals (e.g. `board`, `scores`) directly in the console.
+`tic_tac_toe.html` is the retired single-file version — kept as a redirect only.
+
+---
+
+## Running the Game
+
+Open `index.html` directly in a browser. No server needed. Changes take effect on reload (`F5`).
+
+To test game state from the console:
+```js
+state.board       // current board array
+state.scores      // { X, O, D }
+state.settings    // size, theme, names, AI config
+init()            // reset the round
+```
 
 ---
 
 ## Development Setup
 
-- **Editor**: Any editor works. VS Code with the Live Server extension gives instant reload on save.
-- **Browser**: Chrome or Firefox with DevTools open (`F12`). Use the Console tab for logging and the Elements tab to inspect DOM and CSS live.
-- **No installs required**: There is no `package.json`, no `node_modules`, no build pipeline.
-- **Workflow**: Edit the file → save → reload browser. That's the full loop.
+- Any editor works. VS Code + Live Server gives instant reload on save.
+- Chrome or Firefox with DevTools (`F12`).
+- No `package.json`, no `node_modules`, no build pipeline.
 
 ---
 
 ## Code Architecture
 
-Each project is a single `.html` file divided into three sections:
+### index.html
+Semantic structure only. No inline styles, no onclick attributes. IDs and classes are hooks for JS and CSS only.
 
-1. **HTML** — semantic structure only; no inline styles or onclick attributes. Elements are identified by `id` or a shared class (e.g. `.cell`). Data attributes (e.g. `data-i`) carry index or metadata.
+### style.css
+All layout and theming. CSS custom properties (`--bg`, `--card`, `--accent`, etc.) are defined per theme on `[data-theme]` selectors. Switching themes: `document.documentElement.setAttribute('data-theme', name)`. JS never sets inline styles.
 
-2. **CSS** (`<style>` block) — all layout and theming. State-driven visual changes (e.g. `.winning`, `.taken`, `.x`, `.o`) are applied by adding/removing classes in JS, not by setting `element.style` directly.
+### game.js
+Owns the central `state` object and a `render()` function that syncs the DOM from state.
 
-3. **JavaScript** (`<script>` block) — structured as:
-   - **Constants** at the top (e.g. `WINS` array of winning index triplets).
-   - **State variables** (`board`, `current`, `over`, `scores`) — plain `let`/`const` at script scope.
-   - **DOM references** cached once at startup (`document.querySelectorAll`, `getElementById`).
-   - **Logic functions** (`checkWinner`, etc.) — pure, operate on state, return results, never touch the DOM.
-   - **Event handlers** (`handleClick`, etc.) — call logic functions, then update DOM based on results.
-   - **`init()`** — resets board state and DOM without resetting persistent state like `scores`.
-   - **Event listener wiring** and initial `init()` call at the bottom.
+**State shape:**
+```js
+const state = {
+  board:      [],          // flat array, length = size*size
+  current:    'X',
+  over:       false,
+  winLine:    [],          // indices of winning cells
+  statusText: '',
+  history:    [],          // board snapshots before each move (for undo)
+  scores:     { X, O, D },
+  settings: {
+    size:         3,       // 3 | 4 | 5
+    theme:        'navy',  // 'navy' | 'forest' | 'purple'
+    p1Name:       'Player 1',
+    p2Name:       'Player 2',
+    aiEnabled:    false,
+    aiDifficulty: 'hard',  // 'easy' | 'medium' | 'hard'
+    aiPlaysAs:    'O',
+  },
+};
+```
+
+**Key functions:**
+- `init()` — resets round state, rebuilds board DOM. Does not reset `scores` or `settings`.
+- `makeMove(i, mark)` — saves history, sets `board[i]`, checks result, calls `render()`, triggers AI if needed.
+- `render()` — sole DOM writer for the board. Only adds/removes cell classes when the value changed (preserves pop-in animation).
+- `handleUndo()` — pops 1 history entry (human-only) or 2 (AI mode, undoes AI response + human move).
+- `buildWins(size)` — generates all winning lines dynamically for any board size.
+
+### ai.js
+Pure logic, no DOM access. Single public function:
+```js
+getAiMove(board, aiMark, humanMark, difficulty, size) // returns cell index
+```
+- **Easy**: random empty cell.
+- **Medium**: minimax 60% / random 40%.
+- **Hard**: full minimax with alpha-beta pruning. Unbeatable on 3x3. Depth-limited to 5 on 4x4.
+- AI not available on 5x5.
 
 ---
 
 ## Design Patterns
 
-### State reset vs. full reset
-`init()` resets only round state (`board`, `current`, `over`) and clears cell classes/text. Persistent counters (`scores`) survive across rounds and only reset on page reload.
-
 ### Class-driven visual state
-JS never sets inline styles. Instead, classes like `.x`, `.o`, `.taken`, `.winning` are added to elements, and CSS handles the visual result. This keeps styling in one place.
+JS never sets inline styles for visual state. Classes like `.x`, `.o`, `.taken`, `.winning`, `.active`, `.off` are toggled via `classList`; CSS handles the result.
 
 ### Logic/DOM separation
-`checkWinner()` knows nothing about the DOM — it reads `board[]` and returns a plain object. The handler (`handleClick`) receives that result and decides what to update in the DOM. New games should follow this same split.
+`checkResult()` and `buildWins()` are pure — they read `state.board` and return plain objects. `makeMove()` calls them and updates state. `render()` syncs the DOM.
 
-### Data attributes as index
-Cells use `data-i="0"` through `data-i="8"`. The handler reads `+cell.dataset.i` to get the numeric index into `board[]`. This avoids maintaining a separate mapping between elements and game state.
+### render() is the single DOM writer
+Nothing writes to the board DOM except `render()`. The pop-in animation fires exactly once per new piece because `render()` only adds `taken` when it wasn't already there.
+
+### State reset vs. persistent state
+`init()` resets `board`, `current`, `over`, `winLine`, `history`, `statusText`. It does NOT reset `scores` or `settings`.
+
+---
+
+## Theming
+
+Three themes: **navy** (default), **forest**, **purple** — each a set of CSS custom properties in `style.css`. Switch with `document.documentElement.setAttribute('data-theme', name)`. The difficulty slider glow and all accents inherit from `--accent` and `--accent-glow` automatically.
 
 ---
 
 ## Color Scheme
 
-All projects share this dark palette for visual consistency:
-
-| Role | Value |
-|---|---|
-| Page background | `#1a1a2e` |
-| Card / cell background | `#16213e` |
-| Hover / active element | `#0f3460` |
-| Heading text | `#e0e0ff` |
-| Accent / secondary text | `#a0a0ff` |
-| Player X (red) | `#ff6b6b` |
-| Player O (blue) | `#6bcbff` |
-| Neutral / draws | `#aaa` |
-
-Glow effects use `box-shadow` with low-opacity `rgba(160, 160, 255, 0.4)`.
+| Role | Navy | Forest | Purple |
+|---|---|---|---|
+| Page bg | `#1a1a2e` | `#0d1f12` | `#1a0d2e` |
+| Cell bg | `#16213e` | `#122a18` | `#261040` |
+| Hover | `#0f3460` | `#1a4424` | `#3a1a5e` |
+| Accent | `#a0a0ff` | `#6bffb8` | `#d06bff` |
+| X color | `#ff6b6b` | `#ff6b6b` | `#ff6b6b` |
+| O color | `#6bcbff` | `#6bcbff` | `#6bcbff` |
 
 ---
 
 ## Git Workflow
 
-Every change is committed and pushed to `origin/master`. No feature branches — commits go directly to `master`.
+Commit and push to `origin/master` frequently. No feature branches.
 
 ```
 git add <file>
@@ -89,61 +142,34 @@ git commit -m "short description"
 git push
 ```
 
-**Commit and push frequently** — after every meaningful unit of work (a new feature, a bug fix, a style change, a refactor). Never batch unrelated changes into one commit. The goal is that the remote always reflects the current working state so no progress is ever lost.
-
 ### Commit message rules
-- Lowercase, imperative verb: `add`, `fix`, `update`, `remove`, `refactor`
-- Specific enough to understand without reading the diff (e.g. `add draw detection`, `fix winning line highlight`, `remove unused score reset on restart`)
-- One line; no period at the end
-- If multiple things changed, split into multiple commits
-
-### When to commit
-| Moment | Example message |
-|---|---|
-| After adding a new feature | `add ai opponent logic` |
-| After fixing a bug | `fix click handler firing after game over` |
-| After a visual/style change | `update cell hover color to match palette` |
-| After updating docs/config | `update CLAUDE.md git workflow section` |
-| Before switching to a different task | commit whatever is stable, even if incomplete |
+- Lowercase imperative verb: `add`, `fix`, `update`, `remove`, `refactor`
+- Specific and self-contained — one line, no period
 
 ---
 
 ## Adding New Features
 
-Follow this checklist when extending any project:
-
-1. **Add state** — declare any new variables alongside existing ones (`let`, `const` at script scope). If the state needs to reset per round, add the reset to `init()`.
-2. **Add markup** — add the new HTML element. Give it an `id` if it's unique, a class if it's repeated.
-3. **Add styles** — add CSS for the new element in the `<style>` block. Use existing palette colors.
-4. **Add logic** — write a pure function if the feature involves computation (e.g. `checkWinner`-style). Keep it DOM-free.
-5. **Wire it up** — update the relevant event handler to call the new logic and update the DOM.
-6. **Test reset** — verify `init()` (Restart button) handles the new state correctly.
-
-Example: adding an AI opponent would mean adding an `aiMove()` logic function, calling it inside `handleClick` after the human's turn, and making sure `init()` still works without changes to `aiMove`.
+1. **Add state** — new fields in `state` in `game.js`. Reset in `init()` if round-scoped.
+2. **Add markup** — add to `index.html`. `id` for unique elements, class for repeated.
+3. **Add styles** — add to `style.css`. Use existing custom properties.
+4. **Add logic** — pure function if computation involved. AI logic in `ai.js`, everything else in `game.js`.
+5. **Wire it up** — update event handler, mutate state, call `render()`.
+6. **Test reset** — confirm `init()` handles the new state correctly.
 
 ---
 
 ## Debugging
 
-### Common issues and where to look
-
 | Symptom | Likely cause | Where to check |
 |---|---|---|
-| Click does nothing | `over` is `true` or `board[i]` is already set | `handleClick` guard at the top |
-| Wrong player shown | `current` not toggled | Bottom of `handleClick` after the early-return block |
-| Win not detected | `WINS` array wrong, or `board` indices off | Log `board` after each click; inspect `WINS` |
-| Scores not updating | Score DOM ids don't match JS selectors | Compare `getElementById('score-x')` etc. to HTML `id` attrs |
-| Restart broken | `init()` not resetting all state or not clearing all classes | Step through `init()` in DevTools debugger |
-| Style not applying | Class name mismatch between JS and CSS | Use Elements panel to inspect which classes are actually on the element |
+| Click does nothing | `over` true or `board[i]` set | `boardEl` click handler guard |
+| Wrong player shown | `state.current` not toggled | `makeMove()` after result check |
+| Win not detected | `buildWins()` output wrong | Log `buildWins(state.settings.size)` |
+| AI not triggering | `aiEnabled` false or size is 5 | `state.settings` in console |
+| Theme not applying | `data-theme` not set on `<html>` | `document.documentElement.dataset` |
 
-### Debugging workflow
-
-1. Open DevTools (`F12`) → Console tab.
-2. Add `console.log(board, current, over)` inside `handleClick` to trace state after every move.
-3. Use the Elements panel to verify classes are added/removed as expected.
-4. Use the Sources tab → set a breakpoint inside `handleClick` or `checkWinner` to step through logic.
-5. To simulate a game state, paste into the console:
-   ```js
-   board = ['X','O','X','O','X','O',null,null,null]; current = 'X'; over = false;
-   ```
-   Then click a cell to trigger the next step.
+1. Open DevTools (`F12`) → Console. Inspect `state` directly — it's global.
+2. Call `init()` from console to reset without reloading.
+3. Use Elements panel to verify classes on cells and `<html>`.
+4. Breakpoint in `makeMove()` or `render()` to step through logic.
