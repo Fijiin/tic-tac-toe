@@ -224,13 +224,13 @@ h1 {
   top: 0;
   right: 0;
   height: 100vh;
-  width: 240px;
+  width: 300px;
   background: var(--sidebar-bg);
   border-left: 1px solid var(--sidebar-border);
-  padding: 20px 16px;
+  padding: 24px 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
   z-index: 30;
@@ -244,7 +244,7 @@ h1 {
   justify-content: space-between;
 }
 .sidebar-title {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   letter-spacing: 2px;
   color: var(--subtext);
   text-transform: uppercase;
@@ -253,17 +253,17 @@ h1 {
   background: transparent;
   border: none;
   color: var(--muted);
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   cursor: pointer;
-  padding: 2px 5px;
+  padding: 2px 6px;
   line-height: 1;
 }
 #sidebar-close:hover { color: var(--text); }
 
-.setting-group { display: flex; flex-direction: column; gap: 6px; }
+.setting-group { display: flex; flex-direction: column; gap: 8px; }
 
 .section-label {
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   letter-spacing: 1.5px;
   color: var(--label-color);
   text-transform: uppercase;
@@ -272,9 +272,9 @@ h1 {
 .name-input {
   background: var(--input-bg);
   border: 1px solid var(--sidebar-border);
-  border-radius: 6px;
-  padding: 6px 8px;
-  font-size: 0.75rem;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
   color: var(--text);
   font-family: inherit;
   outline: none;
@@ -285,11 +285,11 @@ h1 {
 .divider { border: none; border-top: 1px solid var(--divider); }
 
 /* ── Pills ──────────────────────────────────────────────────────────────── */
-.pill-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.pill-group { display: flex; gap: 6px; flex-wrap: wrap; }
 .pill {
-  padding: 4px 10px;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   border: 1px solid var(--sidebar-border);
   background: var(--pill-bg);
   color: var(--muted);
@@ -308,11 +308,11 @@ h1 {
 
 /* ── AI toggle ──────────────────────────────────────────────────────────── */
 .toggle-row { display: flex; align-items: center; justify-content: space-between; }
-.toggle-label { font-size: 0.7rem; color: var(--text); }
+.toggle-label { font-size: 0.95rem; color: var(--text); }
 
 .toggle {
-  width: 36px;
-  height: 20px;
+  width: 44px;
+  height: 24px;
   background: var(--accent);
   border-radius: 20px;
   position: relative;
@@ -324,8 +324,8 @@ h1 {
 .toggle::after {
   content: '';
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   background: var(--bg);
   border-radius: 50%;
   top: 3px;
@@ -336,21 +336,21 @@ h1 {
 .toggle.off::after { right: auto; left: 3px; }
 
 /* ── Difficulty slider ──────────────────────────────────────────────────── */
-#difficulty-group { gap: 6px; }
+#difficulty-group { gap: 8px; }
 
 .diff-value {
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: bold;
   color: var(--accent);
   letter-spacing: 1px;
-  min-height: 1rem;
+  min-height: 1.2rem;
   transition: color 0.3s;
 }
 
 .slider-track {
   position: relative;
-  height: 6px;
+  height: 8px;
   background: var(--input-bg);
   border-radius: 99px;
   cursor: pointer;
@@ -371,8 +371,8 @@ h1 {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   background: var(--accent);
   border-radius: 50%;
   border: 2px solid var(--sidebar-bg);
@@ -386,11 +386,11 @@ h1 {
   display: flex;
   justify-content: space-between;
   padding: 0 2px;
-  margin-top: 3px;
+  margin-top: 4px;
 }
 .tick {
   width: 2px;
-  height: 5px;
+  height: 6px;
   background: var(--sidebar-border);
   border-radius: 1px;
   transition: background 0.2s;
@@ -400,7 +400,7 @@ h1 {
 .diff-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   color: var(--label-color);
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -408,11 +408,11 @@ h1 {
 }
 
 /* ── Theme buttons ──────────────────────────────────────────────────────── */
-.theme-btns { display: flex; gap: 6px; }
+.theme-btns { display: flex; gap: 8px; }
 .theme-btn {
-  padding: 4px 10px;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   border: 1px solid var(--sidebar-border);
   background: var(--pill-bg);
   color: var(--muted);
@@ -430,19 +430,19 @@ h1 {
 
 /* ── Sidebar footer ─────────────────────────────────────────────────────── */
 .sidebar-note {
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   color: var(--label-color);
   font-style: italic;
   margin-top: auto;
 }
 
 #sidebar-apply {
-  padding: 8px;
+  padding: 10px;
   background: transparent;
   border: 1px solid var(--accent);
   color: var(--accent);
   border-radius: 20px;
-  font-size: 0.65rem;
+  font-size: 0.9rem;
   letter-spacing: 1px;
   cursor: pointer;
   font-family: inherit;
