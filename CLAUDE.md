@@ -115,8 +115,8 @@ getAiMove(board, aiMark, humanMark, difficulty, size) // returns cell index
 ```
 - **Easy**: random empty cell.
 - **Medium**: minimax 60% / random 40%.
-- **Hard**: full minimax with alpha-beta pruning. Unbeatable on 3×3. Depth-limited to 5 on 4×4.
-- AI not available on 5×5.
+- **Hard**: full minimax with alpha-beta pruning. Unbeatable on 3×3. Depth-limited to 5 on 4×4, depth-limited to 4 on 5×5.
+- AI is available on all board sizes (3×3, 4×4, 5×5).
 
 ---
 
@@ -210,7 +210,7 @@ All doc updates go in the same commit as the feature code. Never commit a featur
 | Click does nothing | `over` true or `board[i]` set | `boardEl` click handler guard |
 | Wrong player shown | `state.current` not toggled | `makeMove()` after result check |
 | Win not detected | `buildWins()` output wrong | Log `buildWins(state.settings.size)` |
-| AI not triggering | `aiEnabled` false or size is 5 | `state.settings` in console |
+| AI not triggering | `aiEnabled` false | `state.settings.aiEnabled` in console |
 | Theme not applying | `data-theme` not set on `<html>` | `document.documentElement.dataset` |
 | Sidebar not closing | `open` / `visible` class not removed | `closeSidebar()` |
 
