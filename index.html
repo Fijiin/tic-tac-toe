@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="navy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <button id="gear-btn" aria-label="Settings">&#9881;</button>
+
+  <main>
+    <h1>Tic Tac Toe</h1>
+
+    <div id="scores">
+      <div class="score-box x">
+        <div class="label" id="label-x">Player 1</div>
+        <div class="value" id="score-x">0</div>
+      </div>
+      <div class="score-box draws">
+        <div class="label">Draws</div>
+        <div class="value" id="score-d">0</div>
+      </div>
+      <div class="score-box o">
+        <div class="label" id="label-o">Player 2</div>
+        <div class="value" id="score-o">0</div>
+      </div>
+    </div>
+
+    <div id="status"></div>
+
+    <div id="board"></div>
+
+    <div id="actions">
+      <button id="undo-btn">&larr; Undo</button>
+      <button id="restart-btn">New Round</button>
+    </div>
+  </main>
+
+  <div id="sidebar-overlay"></div>
+
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">&#9881; Settings</span>
+      <button id="sidebar-close">&#10005;</button>
+    </div>
+
+    <div class="setting-group">
+      <label class="section-label" for="p1-name">Player 1 (X)</label>
+      <input id="p1-name" class="name-input" type="text" placeholder="Player 1" maxlength="12">
+    </div>
+
+    <div class="setting-group">
+      <label class="section-label" for="p2-name">Player 2 (O)</label>
+      <input id="p2-name" class="name-input" type="text" placeholder="Player 2" maxlength="12">
+    </div>
+
+    <hr class="divider">
+
+    <div class="setting-group">
+      <div class="section-label">Board Size</div>
+      <div class="pill-group" id="size-pills">
+        <button class="pill active" data-size="3">3 &times; 3</button>
+        <button class="pill" data-size="4">4 &times; 4</button>
+        <button class="pill" data-size="5">5 &times; 5</button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="setting-group">
+      <div class="toggle-row">
+        <span class="toggle-label">AI Opponent</span>
+        <button class="toggle off" id="ai-toggle" role="switch" aria-checked="false"></button>
+      </div>
+    </div>
+
+    <div class="setting-group" id="difficulty-group" style="display:none">
+      <div class="section-label">Difficulty</div>
+      <div class="diff-value" id="diff-label">Hard</div>
+      <div class="slider-track" id="slider-track">
+        <div class="slider-fill" id="slider-fill" style="width:100%"></div>
+        <div class="slider-thumb" id="slider-thumb" style="left:100%"></div>
+      </div>
+      <div class="slider-ticks">
+        <div class="tick active" id="tick-0"></div>
+        <div class="tick active" id="tick-1"></div>
+        <div class="tick active" id="tick-2"></div>
+      </div>
+      <div class="diff-labels"><span>Easy</span><span>Medium</span><span>Hard</span></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="setting-group">
+      <div class="section-label" style="margin-bottom:10px">Theme</div>
+      <div class="theme-btns" id="theme-btns">
+        <button class="theme-btn active" data-theme="navy">Navy</button>
+        <button class="theme-btn" data-theme="forest">Forest</button>
+        <button class="theme-btn" data-theme="purple">Purple</button>
+      </div>
+    </div>
+
+    <p class="sidebar-note">Board size &amp; AI apply on next round.</p>
+    <button id="sidebar-apply">CLOSE</button>
+  </aside>
+
+  <script src="ai.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
